@@ -1,64 +1,102 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Pressable, ScrollView, Text } from 'react-native';
-import { Card } from 'react-native-elements';
-import axios from 'axios';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ViewNotes from './ViewNotes';
+import ViewContacts from './ViewContacts'; // Ensure this import if not already there
+import LandingPage from './LandingPage'; // Make sure the path matches where you saved this file
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const [data, setData] = useState([]);
-  const apiUrl = "http://10.0.2.2:3000"; // Use 'localhost' if on iOS simulator, '10.0.2.2' for Android emulator, or your local network IP if on a physical device.
-
-  const fetchData = async () => {
-    console.log("API URL:", apiUrl);
-    try {
-      const response = await axios.get(`${apiUrl}/fetch-data`);
-      setData(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setData([]);
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <Pressable style={styles.button} onPress={fetchData}>
-        <Text>Fetch Data</Text>
-      </Pressable>
-      <ScrollView>
-        {data.map((contact, index) => (
-          <Card key={index}>
-            <Card.Title>{contact.FirstName} {contact.LastName}</Card.Title>
-            <Card.Divider />
-            <Text style={styles.cardText}>Age: {contact.Age}</Text>
-            <Text style={styles.cardText}>ID: {contact.ID}</Text>
-            <Text style={styles.cardText}>Notes Created: {contact.NotesCreatedIDs}</Text>
-            <Text style={styles.cardText}>Notes Tagged: {contact.NotesTaggedIDs}</Text>
-            <Text style={styles.cardText}>Primary Notes Tagged: {contact.NotesPrimaryTaggedIDs}</Text>
-          </Card>
-        ))}
-      </ScrollView>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="LandingPage">
+        <Stack.Screen name="LandingPage" component={LandingPage} options={{ title: 'Welcome' }} />
+        <Stack.Screen name="ViewNotes" component={ViewNotes} options={{ title: 'View Notes' }} />
+        <Stack.Screen name="ViewContacts" component={ViewContacts} options={{ title: 'View Contacts' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  cardText: {
-    marginBottom: 10,
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: 'blue',
-  },
-});
-
 export default App;
+
+
+
+
+
+// import React, { useState } from 'react';
+// import { StyleSheet, View, Pressable, Text, TextInput, ScrollView, Alert } from 'react-native';
+// import axios from 'axios';
+
+// const App = () => {
+//     const [firstName, setFirstName] = useState('');
+//     const [lastName, setLastName] = useState('');
+//     const [age, setAge] = useState('');
+//     const [notesCreatedIDs, setNotesCreatedIDs] = useState('');
+//     const [notesTaggedIDs, setNotesTaggedIDs] = useState('');
+//     const [notesPrimaryTaggedIDs, setNotesPrimaryTaggedIDs] = useState('');
+//     const apiUrl = "http://localhost:3000";
+
+//     const addUser = async () => {
+//         if (!firstName || !lastName || !age) {
+//             Alert.alert('Error', 'Please fill in all fields');
+//             return;
+//         }
+//         try {
+//             const payload = {
+//                 FirstName: firstName,
+//                 LastName: lastName,
+//                 Age: parseInt(age, 10),
+//                 NotesCreatedIDs: notesCreatedIDs,
+//                 NotesTaggedIDs: notesTaggedIDs,
+//                 NotesPrimaryTaggedIDs: notesPrimaryTaggedIDs
+//             };
+//             const response = await axios.post(`${apiUrl}/add-user`, payload);
+//             Alert.alert('Success', response.data.message);
+//         } catch (error) {
+//             console.error('Error adding user:', error);
+//             Alert.alert('Error', 'Failed to add user');
+//         }
+//     };
+
+//     return (
+//         <ScrollView style={styles.container}>
+//             <TextInput style={styles.input} placeholder="First Name" onChangeText={setFirstName} value={firstName} />
+//             <TextInput style={styles.input} placeholder="Last Name" onChangeText={setLastName} value={lastName} />
+//             <TextInput style={styles.input} placeholder="Age" onChangeText={setAge} value={age} keyboardType="numeric" />
+//             <TextInput style={styles.input} placeholder="Notes Created IDs" onChangeText={setNotesCreatedIDs} value={notesCreatedIDs} />
+//             <TextInput style={styles.input} placeholder="Notes Tagged IDs" onChangeText={setNotesTaggedIDs} value={notesTaggedIDs} />
+//             <TextInput style={styles.input} placeholder="Primary Notes Tagged IDs" onChangeText={setNotesPrimaryTaggedIDs} value={notesPrimaryTaggedIDs} />
+//             <Pressable style={styles.button} onPress={addUser}>
+//                 <Text style={styles.buttonText}>Add User</Text>
+//             </Pressable>
+//         </ScrollView>
+//     );
+// };
+
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         padding: 20,
+//     },
+//     input: {
+//         height: 40,
+//         margin: 12,
+//         borderWidth: 1,
+//         padding: 10,
+//     },
+//     button: {
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         paddingVertical: 12,
+//         paddingHorizontal: 32,
+//         borderRadius: 4,
+//         backgroundColor: 'blue',
+//     },
+//     buttonText: {
+//         color: 'white',
+//     }
+// });
+
+// export default App;
