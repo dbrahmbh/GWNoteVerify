@@ -103,6 +103,20 @@ app.post('/add-note', async (req, res) => {
     }
 });
 
+app.get('/fetch-contacts', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query(`
+            SELECT [ID], [FirstName], [LastName], [Age]
+            FROM [dbo].[Contacts]
+        `);
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Failed to fetch contacts:', err);
+        res.status(500).json({ message: 'Error fetching contact data', detail: err.message });
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
